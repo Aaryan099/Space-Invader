@@ -1,4 +1,6 @@
 
+		
+
 import pygame
 import random 
 import math
@@ -9,7 +11,7 @@ pygame.init()
 screen = pygame.display.set_mode((720,1600))
 background = pygame.image.load('galaxy.png')
 bulletImg = pygame.image.load('bullet.png')
-bulletImg = pygame.transform.scale(bulletImg,(50,50))
+bulletImg = pygame.transform.scale(bulletImg,(70,70))
 bulletImg2 = pygame.transform.scale(bulletImg,(50,50))
 # Title And Icon
 pygame.display.set_caption('My Game')
@@ -50,6 +52,13 @@ bullet_state = "ready"
 
 # Score
 score= 0
+font = pygame.font.Font('freesansbold.ttf',32)
+txt_x=10
+txt_y=10
+
+def show_score(a,b):
+	report= font.render("Score = "+ str(score),True,(255,255,255))
+	screen.blit(report,(a,b))
 
 
 
@@ -73,16 +82,15 @@ def button():
 def bullet(a,b,):
 	global bullet_state 
 	bullet_state = "fire"
-	screen.blit(bulletImg,(a+50,b+70))
+	screen.blit(bulletImg,(a+40,b+70))
 	
 	
 def collision(enemy_x,enemy_y,bullet_x,bullet_y):
-    distance = math.sqrt(math.pow(enemy_x-bullet_x,2))+(math.pow(enemy_y-bullet_y))
-    
-    if distance <27:
-        return True
-    else :
-        return False
+    distance = math.sqrt(math.pow(enemy_x-bullet_x,2))+(math.pow(enemy_y-bullet_y,2))
+    if distance < 150:
+    	return True
+    else:
+    	return False
 	
 	
 run = True
@@ -136,11 +144,11 @@ while run:
 	   	
 	   	
 	if enemy_x<=0:
-					enemy_x_change = +5
-					enemy_y=enemy_y+enemy_y_change
+		enemy_x_change = +5
+		enemy_y=enemy_y+enemy_y_change
 	elif enemy_x>=620:
-					enemy_x_change = -5
-					enemy_y = enemy_y + enemy_y_change
+		enemy_x_change = -5
+		enemy_y = enemy_y + enemy_y_change
 	if bullet_y<=-100:
 		bullet_y=1000
 		bullet_state="ready"
@@ -148,18 +156,23 @@ while run:
 		bullet(bullet_x,bullet_y)
 		bullet_y-=bullet_y_change	
 		
-    colli= collision(enemy_x, enemy_y, bullet_x, bullet_y)
+	collision2= collision(enemy_x,enemy_y,bullet_x,bullet_y)
     
-    if colli:
-    	bullet_y=1000
-    	bullet_state="ready"
-    	score +=1
-    	enemy_x = random.randint(0,620)
-        enemy_y = random.randint(10,150)
+
+    
+	if collision2:
+    		bullet_y = 1000
+    		bullet_state="ready"
+    		score +=1
+    		enemy_x = random.randint(0,620)
+    		enemy_y = random.randint(10,150)
+    	
     	
 		
 	
 	player(x,y)
 	button()
 	enemy()
+	show_score(txt_x,txt_y)
 	pygame.display.update()
+   
